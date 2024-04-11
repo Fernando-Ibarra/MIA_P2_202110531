@@ -1,0 +1,5 @@
+azul-negro: #000814
+azul-oscuro: #001d3d
+azul: #003566
+mostaza: #ffc300
+amarillo: #ffd60a
