@@ -29,6 +29,7 @@ func main() {
 	// ROUTES
 	router.HandleFunc("/", initServer).Methods("GET")
 	router.HandleFunc("/makeMagic", makeMagic).Methods("POST")
+	router.HandleFunc("/file-system", makeFileSystem).Methods("GET")
 
 	// CORS
 	handler := allowCORS(router)
@@ -55,15 +56,15 @@ func initServer(w http.ResponseWriter, r *http.Request) {
 }
 
 func makeMagic(w http.ResponseWriter, r *http.Request) {
-	var datar DataReq
-	err := json.NewDecoder(r.Body).Decode(&datar)
+	var data DataReq
+	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	// get current comands
-	com := datar.ComandsReq
+	com := data.ComandsReq
 
 	// current path
 	currentPath, _ := os.Getwd()
@@ -127,6 +128,15 @@ func makeMagic(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 	fmt.Fprint(w, responseString)
+}
+
+func makeFileSystem(w http.ResponseWriter, _ *http.Request) {
+	response := Comands.MakeJson()
+	_, err := fmt.Fprintf(w, response)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func Comand(text string) string {

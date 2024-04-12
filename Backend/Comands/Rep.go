@@ -137,7 +137,6 @@ func repMBR(id string, pathOut string, responseString string) {
 				text += "<tr><td bgcolor=\"lightsalmon\">part_s</td><td bgcolor=\"lightsalmon\">" + strconv.Itoa(int(logicPartitions[k].Part_s)) + "</td></tr>\n"
 				text += "<tr><td bgcolor=\"white\">part_next</td><td bgcolor=\"white\">" + strconv.Itoa(int(logicPartitions[k].Part_next)) + "</td></tr>\n"
 				logicPartitionName := ""
-
 				for m := 0; m < len(logicPartitions[k].Part_name); m++ {
 					if logicPartitions[k].Part_name[m] != 0 {
 						logicPartitionName += string(logicPartitions[k].Part_name[m])

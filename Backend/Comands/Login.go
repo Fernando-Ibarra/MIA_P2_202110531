@@ -136,3 +136,84 @@ func LogOut(responseString string) bool {
 	Logged = ActiveUser{}
 	return false
 }
+
+func getUsers(path string, partition Structs.Partition) string {
+	users := ""
+	// ----------------------------------------------------------------------
+	if string(partition.Part_status) == "0" {
+		return ""
+	}
+	file, err := os.Open(strings.ReplaceAll(path, "\"", ""))
+	if err != nil {
+		Error("JSON", "No se ha encontrado el disco", "")
+		return ""
+	}
+	super := Structs.NewSuperBlock()
+	file.Seek(partition.Part_start, 0)
+	data := readBytes(file, int(unsafe.Sizeof(Structs.SuperBlock{})))
+	buffer := bytes.NewBuffer(data)
+	err_ := binary.Read(buffer, binary.BigEndian, &super)
+	if err_ != nil {
+		Error("JSON", "Error al leer el archivo", "")
+		return ""
+	}
+	inode := Structs.NewInodos()
+	file.Seek(super.S_inode_start+int64(unsafe.Sizeof(Structs.Inodos{})), 0)
+	data = readBytes(file, int(unsafe.Sizeof(Structs.Inodos{})))
+	buffer = bytes.NewBuffer(data)
+	err_ = binary.Read(buffer, binary.BigEndian, &inode)
+	if err_ != nil {
+		Error("JSON", "Error al leer el archivo", "")
+		return ""
+	}
+	var fb Structs.FilesBlocks
+	txt := ""
+	for block := 1; block < 16; block++ {
+		if inode.I_block[block-1] == -1 {
+			break
+		}
+		file.Seek(super.S_block_start+int64(unsafe.Sizeof(Structs.DirectoriesBlocks{}))+int64(unsafe.Sizeof(Structs.FilesBlocks{}))*int64(block-1), 0)
+		data = readBytes(file, int(unsafe.Sizeof(Structs.FilesBlocks{})))
+		buffer = bytes.NewBuffer(data)
+		err_ = binary.Read(buffer, binary.BigEndian, &fb)
+		if err_ != nil {
+			Error("JSON", "Error al leer el archivo", "")
+			return ""
+		}
+		for i := 0; i < len(fb.B_content); i++ {
+			if fb.B_content[i] != 0 {
+				txt += string(fb.B_content[i])
+			}
+		}
+	}
+
+	vctr := strings.Split(txt, "\n")
+	for i := 0; i < len(vctr)-1; i++ {
+		line := vctr[i]
+		if line[2] == 'U' || line[2] == 'u' {
+			in := strings.Split(line, ",")
+			if in[0] != "0" {
+				exists := false
+				for j := 0; j < len(vctr)-1; j++ {
+					line2 := vctr[j]
+					if (line2[2] == 'G' || line2[2] == 'g') && line2[0] != '0' {
+						inG := strings.Split(line2, ",")
+						if inG[2] == in[2] {
+							exists = true
+							break
+						}
+					}
+				}
+				if !exists {
+					return ""
+				}
+				users += "{"
+				users += "\"user:\": \"" + in[3] + "\","
+				users += "\"pass:\": \"" + in[4] + "\","
+				users += "},"
+			}
+		}
+	}
+	// -----------------------------------------------------------------------
+	return users
+}
