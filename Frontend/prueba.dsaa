@@ -1,0 +1,152 @@
+#Crea un disco de 3000 Kb
+mkdisk -size=3000 -unit=K -fit=BF
+#Creará un disco de 9 Mb ya que no hay parámetro unit
+mkdisk -size=9
+
+pause
+
+#Elimina con rmdisk A.dsk
+rmdisk -driveletter=A
+
+pause
+
+#CREACIÓN DE PARTICIONES
+fdisk -type=P -unit=M -name=Part1 -size=1 -driveletter=B
+fdisk -type=E -unit=M -name=Part4 -size=4 -driveletter=B
+fdisk -type=P -unit=M -name=Part2 -size=1 -driveletter=B
+fdisk -type=P -unit=M -name=Part3 -size=1 -driveletter=B
+
+pause
+
+#CREACION DE PARTICIONES LOGICAS
+fdisk -size=1 -type=L -unit=M -driveletter=B -name=Particion3
+fdisk -type=L -unit=M -name=Part8 -size=1 -driveletter=B
+fdisk -type=L -unit=M -name=PartX -size=1 -driveletter=B
+
+pause
+
+#ELIMINAR PARTICIONES
+#fdisk -delete=Full -driveletter=B -name=Part3
+#fdisk -delete=Full -driveletter=B -name=Part8
+#fdisk -delete=Full -driveletter=B -name=PartX
+
+pause
+
+#MOUNT
+mount -driveletter=B -name=Part1
+mount -driveletter=B -name=Part2
+mount -driveletter=B -name=PartX
+mount -driveletter=B -name=Particion3
+mount -driveletter=B -name=Part3
+
+pause
+
+#UNMOUNT
+unmount -id=B331
+unmount -id=B431
+
+pause
+
+#MKFS
+mkfs -type=Full -id=B131
+# mkfs -type=Full -id=B131 -fs=3fs
+
+pause
+
+#INICIO DE SESION
+Login -pass=567 -user=roca -id=B131
+
+logout
+
+pause
+
+Login -pass=123 -user=root -id=B131
+
+pause
+
+#CREACION DE GRUPOS
+mkgrp -name=Archivos
+mkgrp -name=Arqui
+mkgrp -name="Compi 2"
+
+pause
+
+#ELIMINACION DE GRUPOS
+rmgrp -name=Arqui
+
+pause
+#CREACION DE USUARIOS
+mkusr -user="user1" -grp=root -pass=user1
+mkusr -user="user2" -grp="Compi 2" -pass=user2
+mkusr -user="user3" -grp="Compi 2" -pass=user3
+
+pause
+
+chgrp -user=user2 -grp=Archivos
+
+pause
+
+#ELIMINACION DE USUARIOS
+rmusr -user=user3
+
+pause
+
+# CREACION DE CARPETAS
+mkdir -r -path=/home/user/docs/usac
+mkdir -r -path=/home/user/desktop
+mkdir -r -path=/home/bin
+mkdir -r -path=/home/user/docs/varios
+mkdir -r -path=/home/user/desktop/fotos
+mkdir -r -path=/home/user/desktop/appData
+
+mkfile -r -path=/home/user/desktop/prueba.txt -size=20
+mkfile -r -path=/home/user/docs/prueba2.txt -size=15
+
+
+# VER ARCHIVOS
+cat -file1=/home/user/docs/prueba2.txt -file2=/home/user/desktop/prueba.txt -file2=/users.txt
+
+pause
+
+rep -id=B131 -path=/home/fernando/Escritorio/reporte_block.jpg -name=block
+rep -id=B131 -path=/home/fernando/Escritorio/reporte_inode.jpg -name=inode
+rep -id=B131 -path=/home/fernando/Escritorio/reporte_mbr.png -name=mbr
+rep -id=B131 -path=/home/fernando/Escritorio/reporte_sb.png -name=sb
+rep -id=B131 -path=/home/fernando/Escritorio/disco.pdf -name=disk
+rep -id=B131 -path=/home/fernando/Escritorio/inodo.txt -name=bm_inode
+rep -id=B131 -path=/home/fernando/Escritorio/bloques.txt -name=bm_bloc
+rep -id=B131 -path=/home/fernando/Escritorio/tree.jpg -name=tree
+rep -id=B131 -path=/home/fernando/Escritorio/archivo1.txt -name=file -ruta=/home/user/docs/prueba2.txt
+rep -id=B131 -path=/home/fernando/Escritorio/archivo2.txt -name=file -ruta=/home/user/desktop/prueba.txt
+rep -id=B131 -path=/home/fernando/Escritorio/archivo3.txt -name=file -ruta=/users.txt
+
+pause
+
+
+move -path="/home/user/docs/usac" -destino="/home/bin"
+move -path="/home/user/desktop/appData" -destino="/home/user"
+
+pause
+
+chmod -path=/home/bin -ugo=777
+chmod -r -path=/home/user -ugo=764
+
+pause
+
+chown -path=/home/bin -user=user2
+chown -r -path=/home/user/docs -user=user2
+
+pause
+
+rep -id=B131 -path=/home/fernando/Escritorio/tree2.jpg -name=tree
+
+pause
+
+rename -path=/home/user/desktop/prueba.txt -name=archivo.txt
+rename -path=/home/user/desktop -name=escritorio
+rename -path=/home/user/escritorio/fotos -name=misfotos
+
+pause
+
+rep -id=B131 -path=/home/fernando/Escritorio/tree3.jpg -name=tree
+rep -id=B131 -path=/home/fernando/Escritorio/ls.jpg -name=ls

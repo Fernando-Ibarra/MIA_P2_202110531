@@ -1,0 +1,155 @@
+{
+    "disks": [
+        {
+            "B.dsk": [
+                {
+                    "Part1": [
+                        {
+                            "users": [
+                                {
+                                    "pass": "123",
+                                    "user": "root"
+                                },
+                                {
+                                    "pass": "user1",
+                                    "user": "user1"
+                                },
+                                {
+                                    "pass": "user2",
+                                    "user": "user2"
+                                }
+                            ]
+                        },
+                        {
+                            "file-system": [
+                                {
+                                    "users.txt": "1.G.root1.U.root.root.1232.G.Archivos0.G.Arqui4.G.Compi22.U.root.user1.user13.U.Archivos.user2.user20.U.Compi2.user3.user3"
+                                },
+                                {
+                                    "home": [
+                                        {
+                                            "user": [
+                                                [
+                                                    {
+                                                        "docs": [
+                                                            [
+                                                                {
+                                                                    "varios": [
+                                                                        []
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            [
+                                                                {
+                                                                    "prueba2.txt": [
+                                                                        "012345678901234"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        ]
+                                                    },
+                                                    {
+                                                        "escritorio": [
+                                                            [
+                                                                {
+                                                                    "misfotos": [
+                                                                        []
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            [
+                                                                {
+                                                                    "archivo.txt": [
+                                                                        "0123456789"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        ]
+                                                    }
+                                                ],
+                                                [
+                                                    {
+                                                        "appData": [
+                                                            []
+                                                        ]
+                                                    }
+                                                ]
+                                            ]
+                                        },
+                                        {
+                                            "bin": [
+                                                [
+                                                    {
+                                                        "usac": [
+                                                            []
+                                                        ]
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Particion3": [
+                        {
+                            "users": []
+                        },
+                        {
+                            "file-system": []
+                        }
+                    ]
+                },
+                {
+                    "Part8": [
+                        {
+                            "users": []
+                        },
+                        {
+                            "file-system": []
+                        }
+                    ]
+                },
+                {
+                    "PartX": [
+                        {
+                            "users": []
+                        },
+                        {
+                            "file-system": []
+                        }
+                    ]
+                },
+                {
+                    "Part2": [
+                        {
+                            "users": []
+                        },
+                        {
+                            "file-system": []
+                        }
+                    ]
+                },
+                {
+                    "Part3": [
+                        {
+                            "users": []
+                        },
+                        {
+                            "file-system": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "C.dsk": []
+        },
+        {
+            "D.dsk": []
+        }
+    ]
+}

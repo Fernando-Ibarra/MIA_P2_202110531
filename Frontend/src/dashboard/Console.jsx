@@ -1,38 +1,27 @@
-import { useEffect, useRef } from 'react';
-import { Grid , Stack } from '@mui/material';
+import { useRef, useState } from 'react';
+import { Grid , Stack, Button } from '@mui/material';
+import Editor from '@monaco-editor/react';
+
 import { DrawerComponent } from '../Layout';
-import Editor, { useMonaco } from '@monaco-editor/react';
-
-function setEditorTheme(monaco) {
-  monaco.editor.defineTheme('onedark', {
-    base: 'vs-dark',
-    inherit: true,
-    rules: [
-      {
-        token: 'comment',
-        foreground: '#5c6370',
-        fontStyle: 'italic'
-      },
-      { token: 'constant', foreground: '#e06c75' }
-    ],
-    colors: {
-      'editor.background': '#21252b'
-    }
-  });
-}
-
+import { useCode } from '../hooks';
 
 export const Console = () => {
   const editorRef = useRef(null);
+  const [ codeValue, setCodeValue ] = useState('');
+  const { output, setActiveCode, setCodeOutput } = useCode();
+
+  const handleCodeChange = () => {
+    setCodeValue(editorRef.current.getValue());
+    setActiveCode(editorRef.current.getValue());
+  }
+  
   const handleEditorDidMount = (editor) => {
     editorRef.current = editor;
   }
 
-  const getEditorValue = () => {
-    return editorRef.current.getValue();
+  const handleExecuteCode = () => {
+    setCodeOutput();
   }
-
-  
 
   return (
     <DrawerComponent
@@ -44,35 +33,49 @@ export const Console = () => {
       >
         <Grid item xs={12}>
           <Editor
-            defaultLanguage="javascript"
-            defaultValue="// Ingrese su código aquí"
+            defaultValue={codeValue}
+            value={codeValue}
             onMount={handleEditorDidMount}
+            onChange={handleCodeChange}
             height="65vh"
             width="100%"
             theme='vs-dark'
             sx={{ borderRadius: 2 }}
-            beforeMount={setEditorTheme}
           />
         </Grid>
 
         <Grid item xs={12}>
           <Stack direction="row" spacing={2}>
             <Editor
-              defaultLanguage="javascript"
-              defaultValue="// Ingrese su código aquí"
-              onMount={handleEditorDidMount}
               height="25vh"
+              defaultValue={output}
+              value={output}
               width="80%"
               theme='vs-dark'
               sx={{ borderRadius: 2 }}
-              disabled
             />
             <Stack
               direction="column"
               spacing={2}
             >
-              <button onClick={() => console.log(getEditorValue())}>Ejecutar</button>
-              <button onClick={() => editorRef.current.setValue('')}>Limpiar</button>
+              <Button
+                sx={{
+                    backgroundColor: '#e87d3e',
+                    color: '#000000',
+                    '&:hover': {
+                        backgroundColor: '#e87d3e'
+                    },
+                    '&:focus': {
+                        backgroundColor: '#e87d3e'
+                    },
+                    '&:active': {
+                        backgroundColor: '#e87d3e'
+                    }                        
+                }}
+                onClick={handleExecuteCode}
+              >
+                Código
+              </Button>
             </Stack>
           </Stack>
         </Grid>
