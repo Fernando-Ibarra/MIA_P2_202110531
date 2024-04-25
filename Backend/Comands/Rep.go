@@ -172,8 +172,8 @@ func repMBR(id string, pathOut string, responseString string) {
 
 	CreateFile(pd)
 	WriteFile(text, pd)
-	termination := strings.Split(pathOut, ".")
-	Execute(pathOut, pd, termination[1], responseString)
+	// termination := strings.Split(pathOut, ".")
+	// Execute(pathOut, pd, termination[1], responseString)
 	Message("REP", "Reporte de MBR se ha generado correctamente en"+pathOut, responseString)
 }
 
@@ -243,8 +243,8 @@ func repSuperBlock(id string, pathOut string, responseString string) {
 
 	CreateFile(pd)
 	WriteFile(text, pd)
-	termination := strings.Split(pathOut, ".")
-	Execute(pathOut, pd, termination[1], responseString)
+	// termination := strings.Split(pathOut, ".")
+	// Execute(pathOut, pd, termination[1], responseString)
 	Message("REP", "Reporte de Superbloque se ha generado correctamente en"+pathOut, responseString)
 }
 
@@ -425,8 +425,8 @@ func repDisk(id string, pathOut string, responseString string) {
 
 	CreateFile(pd)
 	WriteFile(content, pd)
-	termination := strings.Split(pathOut, ".")
-	Execute(pathOut, pd, termination[1], responseString)
+	// termination := strings.Split(pathOut, ".")
+	// Execute(pathOut, pd, termination[1], responseString)
 	Message("REP", "Reporte del Disco se ha generado correctamente en"+pathOut, responseString)
 }
 
@@ -652,8 +652,8 @@ func repInode(id string, pathOut string, responseString string) {
 
 	CreateFile(pd)
 	WriteFile(content, pd)
-	termination := strings.Split(pathOut, ".")
-	Execute(pathOut, pd, termination[1], responseString)
+	// termination := strings.Split(pathOut, ".")
+	// Execute(pathOut, pd, termination[1], responseString)
 	Message("REP", "Reporte de Inodos se ha generado correctamente en"+pathOut, responseString)
 }
 
@@ -828,8 +828,8 @@ func repBlock(id string, pathOut string, responseString string) {
 
 	CreateFile(pd)
 	WriteFile(content, pd)
-	termination := strings.Split(pathOut, ".")
-	Execute(pathOut, pd, termination[1], responseString)
+	// termination := strings.Split(pathOut, ".")
+	// Execute(pathOut, pd, termination[1], responseString)
 	Message("REP", "Reporte de Bloques se ha generado correctamente en"+pathOut, responseString)
 }
 
@@ -1154,8 +1154,8 @@ func repTree(id string, pathOut string, responseString string) {
 
 	CreateFile(pd)
 	WriteFile(content, pd)
-	termination := strings.Split(pathOut, ".")
-	Execute(pathOut, pd, termination[1], responseString)
+	// termination := strings.Split(pathOut, ".")
+	// Execute(pathOut, pd, termination[1], responseString)
 	Message("REP", "Reporte de Tree se ha generado correctamente en"+pathOut, responseString)
 }
 
@@ -1273,8 +1273,8 @@ func repJournaling(id string, pathOut string, responseString string) {
 
 	CreateFile(pd)
 	WriteFile(text, pd)
-	termination := strings.Split(pathOut, ".")
-	Execute(pathOut, pd, termination[1], responseString)
+	// termination := strings.Split(pathOut, ".")
+	// Execute(pathOut, pd, termination[1], responseString)
 	Message("REP", "Reporte de Journaling se ha generado correctamente en"+pathOut, responseString)
 }
 
@@ -1486,8 +1486,8 @@ func repLs(id string, pathOut string, responseString string) {
 	text += "}\n"
 
 	WriteFile(text, pd)
-	termination := strings.Split(pathOut, ".")
-	Execute(pathOut, pd, termination[1], responseString)
+	// termination := strings.Split(pathOut, ".")
+	// Execute(pathOut, pd, termination[1], responseString)
 	Message("REP", "Reporte de Bloques se ha generado correctamente en"+pathOut, responseString)
 
 }

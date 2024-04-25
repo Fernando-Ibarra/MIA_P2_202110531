@@ -22,11 +22,12 @@ func MakeJson() string {
 	// read files in the folder
 	files, err := ioutil.ReadDir(diskPath)
 	if err != nil {
-		fmt.Println("Error al leer la carpet ")
+		fmt.Println("Error al leer la carpeta - JSON TREE ")
 		return ""
 	}
 
-	jsonResponse := "{\"disks\": ["
+	//  jsonResponse := "{\"disks\":
+	jsonResponse := "["
 	// clean disk arrange
 	for _, disk := range files {
 		if strings.Contains(disk.Name(), ".dsk") {
@@ -50,7 +51,10 @@ func MakeJson() string {
 			partitions[2] = mbr.Mbr_partitions_3
 			partitions[3] = mbr.Mbr_partitions_4
 
-			jsonResponse += "{\"" + disk.Name() + "\":["
+			//
+			jsonResponse += "{"
+			jsonResponse += "\"name\": " + "\"" + disk.Name() + "\","
+			jsonResponse += "\"partitions\":["
 			for i := 0; i < len(partitions); i++ {
 				if partitions[i].Part_type == 'E' {
 					logicPartitions = GetLogics(partitions[i], pathTmp, "")
@@ -62,19 +66,14 @@ func MakeJson() string {
 							}
 						}
 						jsonResponse += "{"
-						jsonResponse += "\"" + logicPartitionName + "\":" + "["
-						jsonResponse += "{"
+						jsonResponse += "\"name\":" + "\" " + logicPartitionName + "\","
 						jsonResponse += "\"users\":" + "["
 						users := getUsers(pathTmp, partitions[i])
 						jsonResponse += users
-						jsonResponse += "]"
-						jsonResponse += "},"
-						jsonResponse += "{"
-						jsonResponse += "\"file-system\":" + "["
+						jsonResponse += "],"
+						jsonResponse += "\"fileSystem\":" + "["
 						response := getFileSystem(pathTmp, partitions[i])
 						jsonResponse += response
-						jsonResponse += "]"
-						jsonResponse += "}"
 						jsonResponse += "]"
 						jsonResponse += "},"
 					}
@@ -87,29 +86,26 @@ func MakeJson() string {
 					}
 					if len(partitionName) > 0 {
 						jsonResponse += "{"
-						jsonResponse += "\"" + partitionName + "\":" + "["
-						// "\"info\""
-						jsonResponse += "{"
+						jsonResponse += "\"name\":" + "\" " + partitionName + "\","
 						jsonResponse += "\"users\":" + "["
 						users := getUsers(pathTmp, partitions[i])
 						jsonResponse += users
-						jsonResponse += "]"
-						jsonResponse += "},"
-						jsonResponse += "{"
-						jsonResponse += "\"file-system\":" + "["
+						jsonResponse += "],"
+						jsonResponse += "\"fileSystem\":" + "["
 						response := getFileSystem(pathTmp, partitions[i])
 						jsonResponse += response
-						jsonResponse += "]"
-						jsonResponse += "}"
 						jsonResponse += "]"
 						jsonResponse += "},"
 					}
 				}
 			}
-			jsonResponse += "]}"
+			jsonResponse += "]"
+			jsonResponse += "},"
+
 		}
 	}
-	jsonResponse += "]}"
+	jsonResponse += "]"
+	// jsonResponse += "]
 
 	// number of disks
 	// disks := len(disksPath)
@@ -166,8 +162,10 @@ func getFileSystem(path string, partition Structs.Partition) string {
 					}
 					name += string(folder.B_content[2].B_name[nam])
 				}
-				fileSystem += "{\"" + name + "\":"
-				fileSystem += recursiveFileSystem(folder.B_content[2].B_inodo, partition, path)
+				fileSystem += "{\"file\":"
+				fileSystem += "{\"name\":" + "\"" + name + "\","
+				fileSystem += "\"content\":" + recursiveFileSystem(folder.B_content[2].B_inodo, partition, path)
+				fileSystem += "},"
 				fileSystem += "},"
 			}
 
@@ -179,10 +177,12 @@ func getFileSystem(path string, partition Structs.Partition) string {
 					}
 					name += string(folder.B_content[3].B_name[nam])
 				}
-				fileSystem += "{\"" + name + "\":"
-				fileSystem += recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
+				fileSystem += "{\"folder\":"
+				fileSystem += "{\"name\":" + "\"" + name + "\","
+				fileSystem += "\"content\":" + recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
+				// fileSystem += recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
 				fileSystem += "}"
-				fileSystem += ","
+				fileSystem += "},"
 			}
 		} else {
 			break
@@ -280,7 +280,6 @@ func recursiveFileSystem(control int64, partition Structs.Partition, path string
 			}
 		}
 	} else if inode.I_type == 1 {
-		fileSystem += "{"
 		for i := 0; i < 16; i++ {
 			if inode.I_block[i] != -1 {
 				fileB := Structs.FilesBlocks{}
@@ -297,13 +296,13 @@ func recursiveFileSystem(control int64, partition Structs.Partition, path string
 					contentFile += string(fileB.B_content[nam])
 				}
 				contentFile = strings.ReplaceAll(contentFile, ",", ".")
+				contentFile = strings.ReplaceAll(contentFile, " ", "")
 				content += strings.ReplaceAll(contentFile, "\n", "")
 			} else {
 				break
 			}
 		}
 		fileSystem += "\"" + content + "\""
-		fileSystem += "},"
 	}
 	return fileSystem
 }

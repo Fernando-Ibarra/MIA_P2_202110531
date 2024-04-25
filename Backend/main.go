@@ -5,7 +5,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"log"
 	"net/http"
 	"os"
@@ -24,15 +24,19 @@ type DataReq struct {
 
 func main() {
 	// ROUTER
-	router := mux.NewRouter()
+	// router := mux.NewRouter()
+	mux := http.NewServeMux()
 
 	// ROUTES
-	router.HandleFunc("/", initServer).Methods("GET")
-	router.HandleFunc("/makeMagic", makeMagic).Methods("POST")
-	router.HandleFunc("/file-system", makeFileSystem).Methods("GET")
+	mux.HandleFunc("/", initServer)
+	mux.HandleFunc("/makeMagic", makeMagic)
+	mux.HandleFunc("/file-system", makeFileSystem)
+	mux.HandleFunc("/reports", makeReports)
 
-	// CORS
-	handler := allowCORS(router)
+	// CORS allowCORS(router)
+	handler := cors.Default().Handler(mux)
+
+	// start server listen
 
 	// SERVER
 	fmt.Println("Server on port 3000")
@@ -42,7 +46,7 @@ func main() {
 func allowCORS(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		handler.ServeHTTP(w, r)
 	})
@@ -63,6 +67,7 @@ func makeMagic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	// get current comands
 	com := data.ComandsReq
 
@@ -130,8 +135,21 @@ func makeMagic(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, responseString)
 }
 
-func makeFileSystem(w http.ResponseWriter, _ *http.Request) {
+func makeFileSystem(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	response := Comands.MakeJson()
+	defer r.Body.Close()
+	_, err := fmt.Fprintf(w, response)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func makeReports(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	response := Comands.MakeRep()
+	defer r.Body.Close()
 	_, err := fmt.Fprintf(w, response)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

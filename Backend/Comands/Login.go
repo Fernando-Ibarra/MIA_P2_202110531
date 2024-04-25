@@ -188,6 +188,7 @@ func getUsers(path string, partition Structs.Partition) string {
 	}
 
 	vctr := strings.Split(txt, "\n")
+
 	for i := 0; i < len(vctr)-1; i++ {
 		line := vctr[i]
 		if line[2] == 'U' || line[2] == 'u' {
@@ -208,12 +209,22 @@ func getUsers(path string, partition Structs.Partition) string {
 					return ""
 				}
 				users += "{"
-				users += "\"user:\": \"" + in[3] + "\","
-				users += "\"pass:\": \"" + in[4] + "\","
+				users += "\"user\":\"" + in[3] + "\","
+				users += "\"pass\":\"" + in[4] + "\""
 				users += "},"
 			}
 		}
 	}
 	// -----------------------------------------------------------------------
+	copyUsers := ""
+	for i := 0; i < len(users); i++ {
+		if i == (len(users) - 1) {
+			continue
+		}
+		copyUsers += string(users[i])
+	}
+
+	users = copyUsers
+
 	return users
 }
