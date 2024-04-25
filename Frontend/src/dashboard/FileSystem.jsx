@@ -27,6 +27,7 @@ export const FileSystem = () => {
           padding: '0',
           margin: '0',
           color: 'white',
+          borderRadius: '10px',
         }}
       >
         <Box

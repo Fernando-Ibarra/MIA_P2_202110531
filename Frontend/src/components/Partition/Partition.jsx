@@ -7,8 +7,9 @@ export const Partition = (props) => {
 
     const handlePartition = (part) => {
         console.log(`Particion ${part.name} seleccionada`);
-        console.log(`Usuarios disponibles ${part.users} seleccionados`)
-        console.log(`Sistema de archivos ${part.fileSystem} seleccionado`)
+        console.log(`Usuario user: ${part.users[0].user} con pass: ${part.users[0].pass} seleccionado`)
+        console.log(`Nombre archivo ${part.fileSystem[1].folder.name} seleccionado`)
+        console.log(`Contenido ${part.fileSystem[0].file.content} seleccionado`)
     }
 
     return (
