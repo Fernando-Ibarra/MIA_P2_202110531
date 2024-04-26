@@ -4,15 +4,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 )
 
 func MakeRep() string {
 
 	// current Path
-	// currentPath, _ := os.Getwd()
-	// diskPath := currentPath + "/MIA/P2/"
-	path := "/home/fernando/Escritorio/"
+	currentPath, _ := os.Getwd()
+	diskPath := currentPath + "/MIA/P2/Rep/"
+	path := diskPath
 
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
