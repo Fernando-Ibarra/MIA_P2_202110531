@@ -1,16 +1,27 @@
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import { DrawerComponent } from '../Layout';
+import { Avatar, Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
 import { useFile } from '../hooks';
-import { Disk } from '../components/Disk';
+import { DrawerComponent } from '../Layout';
+
+// import DnsIcon from '@mui/icons-material/Dns';
+
+import StorageIcon from '@mui/icons-material/Storage';
 
 export const FileSystem = () => {
-  const { makefileSystem, file } = useFile();
+
+  const navigate = useNavigate();
+  const { makefileSystem, file, onCurrentDisk } = useFile();
 
   const handleMakefileSystem = () => {
     makefileSystem();
   }
-  console.log(file);
-  
+
+  const handleDisk = (disk) => {
+    onCurrentDisk(disk);
+    navigate('/disk');
+  }
+
   return (
     <DrawerComponent
       name="Sistema de Archivos"
@@ -53,8 +64,9 @@ export const FileSystem = () => {
             >
               Sistema de Archivos
             </Typography>
-
+ 
             <Button
+              size='small'
               variant="contained"
               onClick={handleMakefileSystem}
               sx={{
@@ -62,7 +74,16 @@ export const FileSystem = () => {
                 color: 'black',
                 fontSize: '1rem',
                 fontWeight: 'bold',
-                padding: '10px',
+                padding: '5px',
+                '&:hover': {
+                  backgroundColor: '#ffeb3b',
+                  color: 'black',
+                },
+                '&:active': {
+                  backgroundColor: '#ffeb3b',
+                  color: 'black',
+                },
+
               }}
             >
               Mostrar
@@ -71,7 +92,7 @@ export const FileSystem = () => {
           </Stack>
           
           <Grid container
-            spacing={4}
+            spacing={1}
           >
             {
               (file) 
@@ -79,10 +100,61 @@ export const FileSystem = () => {
                 file.map((item, index) => (
                   <Grid 
                     item 
-                    lg={12} 
+                    lg={6} 
                     key={index}
                   >
-                    <Disk disk={item}  />
+                    <Stack
+                      direction="column"
+                      sx={{
+                        backgroundColor: '#001d3d',
+                        bgcolor: '001d3d',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Button
+                        onClick={() => handleDisk(item)}
+                        sx={{
+                          color: 'white',
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          padding: '10px',
+                          '&:hover': {
+                            backgroundColor: '#001d3d',
+                            color: 'black',
+                          },
+                          '&:active': {
+                            backgroundColor: '#001d3d',
+                            color: 'black',
+                          },
+                        }}
+                      >
+                        <Avatar
+                          sx={{
+                            color: 'white',
+                            bgcolor: '#001d3d',
+                            fontSize: '3rem',
+                            width: '100px',
+                            height: '100px',
+                            '&:hover': {
+                              color: '#001d3d',
+                              bgcolor: 'white'
+                            },
+                          }}
+                        >
+                          <StorageIcon 
+                            sx={{
+                              fontSize: '3rem',
+                            }}
+                          />
+                        </Avatar>
+                      </Button>
+                      <Typography>
+                        {item.name}
+                      </Typography>
+                    </Stack>
+
+                    {/* <Disk disk={item}  /> */}
                   </Grid>
                 ))
               )

@@ -76,7 +76,7 @@ export const ViewReport = () => {
           dot={currentReport.content}
           options={{
               width: '100%',
-              height: 1000,
+              height: 990,
               zoom: true,
           }}
         />

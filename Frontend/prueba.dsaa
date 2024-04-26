@@ -2,6 +2,7 @@
 mkdisk -size=3000 -unit=K -fit=BF
 #Creará un disco de 9 Mb ya que no hay parámetro unit
 mkdisk -size=9
+mkdisk -size=10
 
 pause
 

@@ -60,21 +60,21 @@ export const Console = () => {
             >
               <Button
                 sx={{
-                    backgroundColor: '#e87d3e',
+                    backgroundColor: '#ffc300',
                     color: '#000000',
                     '&:hover': {
-                        backgroundColor: '#e87d3e'
+                        backgroundColor: '#ffc300'
                     },
                     '&:focus': {
-                        backgroundColor: '#e87d3e'
+                        backgroundColor: '#ffc300'
                     },
                     '&:active': {
-                        backgroundColor: '#e87d3e'
+                        backgroundColor: '#ffc300'
                     }                        
                 }}
                 onClick={handleExecuteCode}
               >
-                Código
+                Ejecutar
               </Button>
             </Stack>
           </Stack>

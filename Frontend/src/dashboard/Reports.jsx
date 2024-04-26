@@ -104,6 +104,9 @@ export const Reports = () => {
                           }}
                         >
                           <ArticleOutlinedIcon fontSize="inherit"
+                            sx={{
+                              fontSize: '3rem',
+                            }}
                           />
                         </IconButton>
 
@@ -126,7 +129,11 @@ export const Reports = () => {
                             color: 'white'
                           }}
                         >
-                          <SummarizeOutlinedIcon fontSize="inherit" />
+                          <SummarizeOutlinedIcon fontSize="inherit"
+                            sx={{
+                              fontSize: '3rem',
+                            }}
+                          />
                         </IconButton>
 
                         <Typography variant="h5" sx={{ color: 'white' }}>

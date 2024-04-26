@@ -5,20 +5,27 @@ export const userSlice = createSlice({
     initialState: {
         user: '',
         pass: '',
-        grupo: ''
+        status: 'not-authenticated', // 'checking', 'not-authenticated', 'authenticated'
+        users: []
     },
     reducers: {
         login: (state, action) => {
             state.user = action.payload.user;
             state.pass = action.payload.pass;
-            state.grupo = action.payload.grupo;
+            state.status = 'authenticated';
+        },
+        checking: (state) => {
+            state.status = 'checking';
         },
         logout: (state) => {
             state.user = '';
             state.pass = '';
-            state.grupo = '';
+            state.status = 'not-authenticated';
+        },
+        setUsers: (state, action) => {
+            state.users = action.payload;
         }
     }
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, setUsers, checking } = userSlice.actions;
