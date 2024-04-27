@@ -42,6 +42,20 @@ func DataRep(context []string, responseString string) {
 		return
 	}
 
+	aux := strings.Split(pathOut, "/")
+
+	last := len(aux)
+
+	nameDot := aux[last-1]
+
+	nameG := nameDot[:len(nameDot)-3]
+
+	currentPath, _ := os.Getwd()
+	diskPath := currentPath + "/MIA/P2/Rep/"
+	pathOut = diskPath + nameG
+
+	fmt.Println(pathOut)
+
 	if Compare(name, "mbr") {
 		repMBR(id, pathOut, responseString)
 	} else if Compare(name, "sb") {
@@ -459,7 +473,7 @@ func repBM(id string, pathOut, t string, responseString string) {
 		return
 	}
 
-	CreateFile(pathOut)
+	CreateFile(pathOut + "txt")
 	content := ""
 	counter := 1
 	ch := '2'
@@ -510,7 +524,7 @@ func repBM(id string, pathOut, t string, responseString string) {
 		}
 	}
 
-	WriteFile(content, pathOut)
+	WriteFile(content, pathOut+"txt")
 	if t == "BI" {
 		Message("REP", "Reporte de los bitmaps de Inodos "+pathOut+", creado correctamente", responseString)
 	} else {
@@ -554,6 +568,7 @@ func repInode(id string, pathOut string, responseString string) {
 		return
 	}
 	pd := aux[0] + ".dot"
+	fmt.Println(pd)
 
 	super := Structs.NewSuperBlock()
 	file.Seek(partition.Part_start, 0)
@@ -1291,11 +1306,11 @@ func repCat(id string, pathOut string, file string, responseString string) {
 		return
 	}
 	content := ""
-	CreateFile(pathOut)
+	CreateFile(pathOut + "txt")
 
 	tmp := GetPath(file)
 	content = cat(tmp, partition, path, responseString)
-	WriteFile(content, pathOut)
+	WriteFile(content, pathOut+"txt")
 	Message("REP", "Reporte de CAT se ha generado correctamente en"+pathOut, responseString)
 }
 

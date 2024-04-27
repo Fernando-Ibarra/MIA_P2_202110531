@@ -16,7 +16,7 @@ var CounterDisk = 1
 
 var logued = false
 
-var responseString = ""
+var ResponseString = ""
 
 type DataReq struct {
 	ComandsReq string `json:"comands_req"`
@@ -60,6 +60,8 @@ func initServer(w http.ResponseWriter, r *http.Request) {
 }
 
 func makeMagic(w http.ResponseWriter, r *http.Request) {
+	CounterDisk = 1
+
 	var data DataReq
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
@@ -112,12 +114,12 @@ func makeMagic(w http.ResponseWriter, r *http.Request) {
 		tk := Comand(text)
 		if text != "" {
 			if Comands.Compare(tk, "pause") {
-				responseString += ">>>>>>>>>> COMANDD PAUSA <<<<<<<<<<<<<<<<<<<<\n"
-				Comands.Message("PAUSE", "PROGRAMDA PAUSADO", responseString)
+				ResponseString += ">>>>>>>>>> COMANDD PAUSA <<<<<<<<<<<<<<<<<<<<\n"
+				Comands.Message("PAUSE", "PROGRAMDA PAUSADO", ResponseString)
 				continue
 			} else if string(text[0]) == "#" {
-				responseString += ">>>>>>>>>> COMENTARIO <<<<<<<<<<<<<<<<<<<<\n"
-				Comands.Message("COMENTARIO", text, responseString)
+				ResponseString += ">>>>>>>>>> COMENTARIO <<<<<<<<<<<<<<<<<<<<\n"
+				Comands.Message("COMENTARIO", text, ResponseString)
 				continue
 			}
 			text = strings.TrimLeft(text, tk)
@@ -132,7 +134,7 @@ func makeMagic(w http.ResponseWriter, r *http.Request) {
 		)
 	}
 	defer r.Body.Close()
-	fmt.Fprint(w, responseString)
+	fmt.Fprint(w, ResponseString)
 }
 
 func makeFileSystem(w http.ResponseWriter, r *http.Request) {
@@ -242,180 +244,176 @@ func Separatorokens(text string) []string {
 func functions(token string, tks []string) {
 	if token != "" {
 		if Comands.Compare(token, "MKDISK") {
-			responseString += ""
-			responseString += "-------------------> COMANDO MKDISK <-------------------\n"
-			Comands.DataMKDISK(tks, CounterDisk, &CounterDisk, responseString)
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO MKDISK <-------------------\n"
+			Comands.DataMKDISK(tks, CounterDisk, &CounterDisk, ResponseString)
 			CounterDisk++
 		} else if Comands.Compare(token, "RMDISK") {
-			responseString += ""
-			responseString += "-------------------> COMANDO RMDISK <-------------------\n"
-			Comands.RMDISK(tks, responseString)
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO RMDISK <-------------------\n"
+			Comands.RMDISK(tks, ResponseString)
 		} else if Comands.Compare(token, "FDISK") {
-			responseString += ""
-			responseString += "-------------------> COMANDO FDISK <-------------------\n"
-			Comands.DataFDISK(tks, responseString)
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO FDISK <-------------------\n"
+			Comands.DataFDISK(tks, ResponseString)
 		} else if Comands.Compare(token, "MOUNT") {
-			responseString += ""
-			responseString += "-------------------> COMANDO MOUNT <-------------------\n"
-			Comands.DataMount(tks, responseString)
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO MOUNT <-------------------\n"
+			Comands.DataMount(tks, ResponseString)
 		} else if Comands.Compare(token, "UNMOUNT") {
-			responseString += ""
-			responseString += "-------------------> COMANDO UNMOUNT <-------------------\n"
-			Comands.DataUnMount(tks, responseString)
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO UNMOUNT <-------------------\n"
+			Comands.DataUnMount(tks, ResponseString)
 		} else if Comands.Compare(token, "MKFS") {
-			responseString += ""
-			responseString += "-------------------> COMANDO MKFS <-------------------\n"
-			Comands.DataMkfs(tks, responseString)
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO MKFS <-------------------\n"
+			Comands.DataMkfs(tks, ResponseString)
 		} else if Comands.Compare(token, "LOGIN") {
-			responseString += ""
-			responseString += "-------------------> COMANDO LOGIN <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO LOGIN <-------------------\n"
 			if logued {
-				Comands.Error("LOGIN", "Ya hay un usuario en linea.", responseString)
+				Comands.Error("LOGIN", "Ya hay un usuario en linea.", ResponseString)
 				return
 			} else {
-				logued = Comands.DataUserLogin(tks, responseString)
+				logued = Comands.DataUserLogin(tks, ResponseString)
 			}
 		} else if Comands.Compare(token, "LOGOUT") {
-			responseString += ""
-			responseString += "-------------------> COMANDO LOGOUT <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO LOGOUT <-------------------\n"
 			if !logued {
-				Comands.Error("LOGOUT", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("LOGOUT", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
-				logued = Comands.LogOut(responseString)
+				logued = Comands.LogOut(ResponseString)
 			}
 		} else if Comands.Compare(token, "MKGRP") {
-			responseString += ""
-			responseString += "-------------------> COMANDO MKGRP <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO MKGRP <-------------------\n"
 			if !logued {
-				Comands.Error("MKGRP", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("MKGRP", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
-				Comands.DataGroup(tks, "MK", responseString)
+				Comands.DataGroup(tks, "MK", ResponseString)
 			}
 		} else if Comands.Compare(token, "RMGRP") {
-			responseString += ""
-			responseString += "-------------------> COMANDO RMGRP <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO RMGRP <-------------------\n"
 			if !logued {
-				Comands.Error("RMGRP", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("RMGRP", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
-				Comands.DataGroup(tks, "RM", responseString)
+				Comands.DataGroup(tks, "RM", ResponseString)
 			}
 		} else if Comands.Compare(token, "CHGRP") {
-			responseString += ""
-			responseString += "-------------------> COMANDO CHGRP <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO CHGRP <-------------------\n"
 			if !logued {
-				Comands.Error("CHGRP", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("CHGRP", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
-				Comands.DataUser(tks, "CH", responseString)
+				Comands.DataUser(tks, "CH", ResponseString)
 			}
 		} else if Comands.Compare(token, "MKUSR") {
-			responseString += ""
-			responseString += "-------------------> COMANDO MKUSR <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO MKUSR <-------------------\n"
 			if !logued {
-				Comands.Error("MKUSER", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("MKUSER", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
-				Comands.DataUser(tks, "MK", responseString)
+				Comands.DataUser(tks, "MK", ResponseString)
 			}
 		} else if Comands.Compare(token, "RMUSR") {
-			responseString += ""
-			responseString += "-------------------> COMANDO RMUSR <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO RMUSR <-------------------\n"
 			if !logued {
-				Comands.Error("RMUSER", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("RMUSER", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
-				Comands.DataUser(tks, "RM", responseString)
+				Comands.DataUser(tks, "RM", ResponseString)
 			}
 		} else if Comands.Compare(token, "MKDIR") {
-			responseString += ""
-			responseString += "-------------------> COMANDO MKDIR <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO MKDIR <-------------------\n"
 			if !logued {
-				Comands.Error("MKDIR", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("MKDIR", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
 				var p string
-				partition := Comands.GetMount("MKDIR", Comands.Logged.Id, &p, responseString)
-				Comands.DataDir(tks, partition, p, responseString)
+				partition := Comands.GetMount("MKDIR", Comands.Logged.Id, &p, ResponseString)
+				Comands.DataDir(tks, partition, p, ResponseString)
 			}
 		} else if Comands.Compare(token, "MKFILE") {
-			responseString += ""
-			responseString += "-------------------> COMANDO MKFILE <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO MKFILE <-------------------\n"
 			if !logued {
-				Comands.Error("MKDIR", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("MKDIR", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
 				var p string
-				partition := Comands.GetMount("MKDIR", Comands.Logged.Id, &p, responseString)
-				Comands.DataFile(tks, partition, p, responseString)
+				partition := Comands.GetMount("MKDIR", Comands.Logged.Id, &p, ResponseString)
+				Comands.DataFile(tks, partition, p, ResponseString)
 			}
 		} else if Comands.Compare(token, "CAT") {
-			responseString += ""
-			responseString += "-------------------> COMANDO CAT <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO CAT <-------------------\n"
 			if !logued {
-				Comands.Error("CAT", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("CAT", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
 				var p string
-				partition := Comands.GetMount("CAT", Comands.Logged.Id, &p, responseString)
-				Comands.DataCat(tks, partition, p, responseString)
+				partition := Comands.GetMount("CAT", Comands.Logged.Id, &p, ResponseString)
+				Comands.DataCat(tks, partition, p, ResponseString)
 			}
 		} else if Comands.Compare(token, "CHMOD") {
-			responseString += ""
-			responseString += "-------------------> COMANDO CHMOD <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO CHMOD <-------------------\n"
 			if !logued {
-				Comands.Error("CHMOD", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("CHMOD", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
 				var p string
-				partition := Comands.GetMount("CHMOD", Comands.Logged.Id, &p, responseString)
-				Comands.DataChmod(tks, partition, p, responseString)
+				partition := Comands.GetMount("CHMOD", Comands.Logged.Id, &p, ResponseString)
+				Comands.DataChmod(tks, partition, p, ResponseString)
 			}
 		} else if Comands.Compare(token, "CHOWN") {
-			responseString += ""
-			responseString += "-------------------> COMANDO CHOWN <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO CHOWN <-------------------\n"
 			if !logued {
-				Comands.Error("CHOWN", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("CHOWN", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
 				var p string
-				partition := Comands.GetMount("CHOWN", Comands.Logged.Id, &p, responseString)
-				Comands.DataChown(tks, partition, p, responseString)
+				partition := Comands.GetMount("CHOWN", Comands.Logged.Id, &p, ResponseString)
+				Comands.DataChown(tks, partition, p, ResponseString)
 			}
 		} else if Comands.Compare(token, "RENAME") {
-			responseString += ""
-			responseString += "-------------------> COMANDO RENAME <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO RENAME <-------------------\n"
 			if !logued {
-				Comands.Error("RENAME", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("RENAME", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
 				var p string
-				partition := Comands.GetMount("CHOWN", Comands.Logged.Id, &p, responseString)
-				Comands.DataRename(tks, partition, p, responseString)
+				partition := Comands.GetMount("CHOWN", Comands.Logged.Id, &p, ResponseString)
+				Comands.DataRename(tks, partition, p, ResponseString)
 			}
 		} else if Comands.Compare(token, "MOVE") {
-			responseString += ""
-			responseString += "-------------------> COMANDO MOVE <-------------------\n"
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO MOVE <-------------------\n"
 			if !logued {
-				Comands.Error("MOVE", "Aún no se ha iniciado sesión", responseString)
+				Comands.Error("MOVE", "Aún no se ha iniciado sesión", ResponseString)
 				return
 			} else {
 				var p string
-				partition := Comands.GetMount("MOVE", Comands.Logged.Id, &p, responseString)
-				Comands.DataMove(tks, partition, p, responseString)
+				partition := Comands.GetMount("MOVE", Comands.Logged.Id, &p, ResponseString)
+				Comands.DataMove(tks, partition, p, ResponseString)
 			}
 		} else if Comands.Compare(token, "REP") {
-			responseString += ""
-			responseString += "-------------------> COMANDO REP <-------------------\n"
-			Comands.DataRep(tks, responseString)
+			ResponseString += ""
+			ResponseString += "-------------------> COMANDO REP <-------------------\n"
+			Comands.DataRep(tks, ResponseString)
 		} else {
-			Comands.Error("ANALIZADOR", "NO se reconoce el comando \" "+token+"\" ", responseString)
+			Comands.Error("ANALIZADOR", "NO se reconoce el comando \" "+token+"\" ", ResponseString)
 		}
 	}
-}
-
-func setResponseString(text string) {
-	responseString += text + "\n"
 }

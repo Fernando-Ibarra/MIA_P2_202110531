@@ -21,7 +21,6 @@ func Compare(a string, b string) bool {
 func Error(op string, message string, responseString string) {
 	responseString += ""
 	responseString += "\tERROR: " + op + "\n\tTIPO: " + message
-
 }
 
 func Message(op string, message string, responseString string) {

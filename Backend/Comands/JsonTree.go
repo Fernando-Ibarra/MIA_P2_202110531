@@ -224,6 +224,7 @@ func recursiveFileSystem(control int64, partition Structs.Partition, path string
 
 	content := ""
 	if inode.I_type == 0 {
+		fileSystem += "["
 		for i := 0; i < 16; i++ {
 			if i < 16 {
 				if inode.I_block[i] != -1 {
@@ -232,7 +233,7 @@ func recursiveFileSystem(control int64, partition Structs.Partition, path string
 					data = readBytes(file, int(unsafe.Sizeof(Structs.DirectoriesBlocks{})))
 					buffer = bytes.NewBuffer(data)
 					err_ = binary.Read(buffer, binary.BigEndian, &folder)
-					fileSystem += "["
+					// fileSystem += "["
 
 					if folder.B_content[2].B_inodo != -1 {
 						name := ""
@@ -243,14 +244,29 @@ func recursiveFileSystem(control int64, partition Structs.Partition, path string
 							name += string(folder.B_content[2].B_name[nam])
 						}
 
-						fileSystem += "{\"" + name + "\":" + "["
-						response := recursiveFileSystem(folder.B_content[2].B_inodo, partition, path)
-						if response != "" {
+						// fileSystem += "{\"" + name + "\":" + "["
+						// response := recursiveFileSystem(folder.B_content[2].B_inodo, partition, path)
+						/* if response != "" {
 							fileSystem += response
 						} else {
 							continue
+						} */
+						// fileSystem += "]},"
+
+						fileSystem += "{\"folder\":"
+						fileSystem += "{\"name\":" + "\"" + name + "\","
+						// fileSystem += "\"content\":" + recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
+
+						response := recursiveFileSystem(folder.B_content[2].B_inodo, partition, path)
+						if response != "" {
+							fileSystem += "\"content\":" + response
+						} else {
+							continue
 						}
-						fileSystem += "]},"
+
+						// fileSystem += recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
+						fileSystem += "}"
+						fileSystem += "},"
 					}
 
 					if folder.B_content[3].B_inodo != -1 {
@@ -261,17 +277,33 @@ func recursiveFileSystem(control int64, partition Structs.Partition, path string
 							}
 							name += string(folder.B_content[3].B_name[nam])
 						}
-						fileSystem += "{\"" + name + "\":" + "["
-						response := recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
-						if response != "" {
+						// fileSystem += "{\"" + name + "\":" + "["
+						// response := recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
+						/* if response != "" {
 							fileSystem += response
 						} else {
 							continue
+						}*/
+						// fileSystem += "]},"
+
+						fileSystem += "{\"folder\":"
+						fileSystem += "{\"name\":" + "\"" + name + "\","
+						// fileSystem += "\"content\":" + recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
+
+						response := recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
+						if response != "" {
+							fileSystem += "\"content\":" + response
+						} else {
+							continue
 						}
-						fileSystem += "]},"
+
+						// fileSystem += recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
+						fileSystem += "}"
+						fileSystem += "},"
 					}
 
-					fileSystem += "],"
+					// fileSystem += "],"
+
 				} else {
 					break
 				}
@@ -279,6 +311,7 @@ func recursiveFileSystem(control int64, partition Structs.Partition, path string
 				break
 			}
 		}
+		fileSystem += "],"
 	} else if inode.I_type == 1 {
 		for i := 0; i < 16; i++ {
 			if inode.I_block[i] != -1 {
