@@ -8,7 +8,7 @@ import { useCode } from '../hooks';
 export const Console = () => {
   const editorRef = useRef(null);
   const [ codeValue, setCodeValue ] = useState('');
-  const { output, setActiveCode, setCodeOutput } = useCode();
+  const { output, setActiveCode, setCodeOutput, deleteAll } = useCode();
 
   const handleCodeChange = () => {
     setCodeValue(editorRef.current.getValue());
@@ -21,6 +21,10 @@ export const Console = () => {
 
   const handleExecuteCode = () => {
     setCodeOutput();
+  }
+
+  const handleDeleteAll = () => {
+    deleteAll();
   }
 
   return (
@@ -37,7 +41,7 @@ export const Console = () => {
             value={codeValue}
             onMount={handleEditorDidMount}
             onChange={handleCodeChange}
-            height="65vh"
+            height="60vh"
             width="100%"
             theme='vs-dark'
             sx={{ borderRadius: 2 }}
@@ -47,12 +51,15 @@ export const Console = () => {
         <Grid item xs={12}>
           <Stack direction="row" spacing={2}>
             <Editor
-              height="25vh"
+              height="30vh"
               defaultValue={output}
               value={output}
-              width="80%"
+              width="90%"
               theme='vs-dark'
               sx={{ borderRadius: 2 }}
+              options={{
+                readOnly: true
+              }}
             />
             <Stack
               direction="column"
@@ -75,6 +82,24 @@ export const Console = () => {
                 onClick={handleExecuteCode}
               >
                 Ejecutar
+              </Button>
+              <Button
+                sx={{
+                    backgroundColor: '#ffd60a',
+                    color: '#000000',
+                    '&:hover': {
+                        backgroundColor: '#ffd60a'
+                    },
+                    '&:focus': {
+                        backgroundColor: '#ffd60a'
+                    },
+                    '&:active': {
+                        backgroundColor: '#ffd60a'
+                    }                        
+                }}
+                onClick={handleDeleteAll}
+              >
+                Eliminar
               </Button>
             </Stack>
           </Stack>

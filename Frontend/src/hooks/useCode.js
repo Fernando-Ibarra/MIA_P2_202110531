@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
+import Swal from 'sweetalert2'
 
 import { setCode, setOutput } from '../store';
 import { appApi } from '../api';
@@ -21,10 +22,23 @@ export const useCode = () => {
         dispatch(setOutput(codeOutputString));
     }
 
+    const deleteAll = async () => {
+        const { data } = await appApi.post('/delete', {});
+        Swal.fire({
+            position: "bottom-left",
+            icon: "success",
+            title: `${data}`,
+            showConfirmButton: false,
+            timer: 1500
+        });
+        
+    }
+
     return {
         code,
         output,
         setActiveCode,
-        setCodeOutput
+        setCodeOutput,
+        deleteAll
     }
 }
