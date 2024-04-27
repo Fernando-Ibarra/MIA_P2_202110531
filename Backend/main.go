@@ -32,6 +32,7 @@ func main() {
 	mux.HandleFunc("/makeMagic", makeMagic)
 	mux.HandleFunc("/file-system", makeFileSystem)
 	mux.HandleFunc("/reports", makeReports)
+	mux.HandleFunc("/delete", deleteFiles)
 
 	// CORS allowCORS(router)
 	handler := cors.Default().Handler(mux)
@@ -61,7 +62,6 @@ func initServer(w http.ResponseWriter, r *http.Request) {
 
 func makeMagic(w http.ResponseWriter, r *http.Request) {
 	CounterDisk = 1
-
 	var data DataReq
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
@@ -114,10 +114,14 @@ func makeMagic(w http.ResponseWriter, r *http.Request) {
 		tk := Comand(text)
 		if text != "" {
 			if Comands.Compare(tk, "pause") {
+				Comands.SetStringtoRes("")
+				Comands.SetStringtoRes("\t>>>>>>>>>> COMANDD PAUSA <<<<<<<<<<<<<<<<<<<<\n")
 				ResponseString += ">>>>>>>>>> COMANDD PAUSA <<<<<<<<<<<<<<<<<<<<\n"
 				Comands.Message("PAUSE", "PROGRAMDA PAUSADO", ResponseString)
 				continue
 			} else if string(text[0]) == "#" {
+				Comands.SetStringtoRes("")
+				Comands.SetStringtoRes("\t>>>>>>>>>> COMENTARIO <<<<<<<<<<<<<<<<<<<<\n")
 				ResponseString += ">>>>>>>>>> COMENTARIO <<<<<<<<<<<<<<<<<<<<\n"
 				Comands.Message("COMENTARIO", text, ResponseString)
 				continue
@@ -134,7 +138,8 @@ func makeMagic(w http.ResponseWriter, r *http.Request) {
 		)
 	}
 	defer r.Body.Close()
-	fmt.Fprint(w, ResponseString)
+	resString := Comands.GetStirngRes()
+	fmt.Fprint(w, resString)
 }
 
 func makeFileSystem(w http.ResponseWriter, r *http.Request) {
@@ -150,11 +155,41 @@ func makeFileSystem(w http.ResponseWriter, r *http.Request) {
 
 func makeReports(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
 	response := Comands.MakeRep()
 	defer r.Body.Close()
 	_, err := fmt.Fprintf(w, response)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func deleteFiles(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	currentPath, _ := os.Getwd()
+	path := currentPath + "/MIA"
+	err := os.RemoveAll(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pathComands := currentPath + "/comandos.txt"
+	errComan := os.RemoveAll(pathComands)
+	if errComan != nil {
+		log.Fatal(errComan)
+	}
+
+	path2 := currentPath + "/MIA/P2/Rep"
+	errC := os.MkdirAll(path2, 0755)
+	if errC != nil {
+		return
+	}
+
+	response := "Sistema Borrado"
+	defer r.Body.Close()
+	_, errS := fmt.Fprintf(w, response)
+	if errS != nil {
 		return
 	}
 }
@@ -246,31 +281,45 @@ func functions(token string, tks []string) {
 		if Comands.Compare(token, "MKDISK") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO MKDISK <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO MKDISK <-------------------\n")
 			Comands.DataMKDISK(tks, CounterDisk, &CounterDisk, ResponseString)
 			CounterDisk++
 		} else if Comands.Compare(token, "RMDISK") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO RMDISK <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO RMDISK <-------------------\n")
 			Comands.RMDISK(tks, ResponseString)
 		} else if Comands.Compare(token, "FDISK") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO FDISK <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO FDISK <-------------------\n")
 			Comands.DataFDISK(tks, ResponseString)
 		} else if Comands.Compare(token, "MOUNT") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO MOUNT <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO MOUNT <-------------------\n")
 			Comands.DataMount(tks, ResponseString)
 		} else if Comands.Compare(token, "UNMOUNT") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO UNMOUNT <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO UNMOUNT <-------------------\n")
 			Comands.DataUnMount(tks, ResponseString)
 		} else if Comands.Compare(token, "MKFS") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO MKFS <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO MKFS <-------------------\n")
 			Comands.DataMkfs(tks, ResponseString)
 		} else if Comands.Compare(token, "LOGIN") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO LOGIN <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO LOGIN <-------------------\n")
 			if logued {
 				Comands.Error("LOGIN", "Ya hay un usuario en linea.", ResponseString)
 				return
@@ -280,6 +329,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "LOGOUT") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO LOGOUT <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO LOGOUT <-------------------\n")
 			if !logued {
 				Comands.Error("LOGOUT", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -289,6 +340,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "MKGRP") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO MKGRP <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO MKGRP <-------------------\n")
 			if !logued {
 				Comands.Error("MKGRP", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -298,6 +351,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "RMGRP") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO RMGRP <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO RMGRP <-------------------\n")
 			if !logued {
 				Comands.Error("RMGRP", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -307,6 +362,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "CHGRP") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO CHGRP <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO CHGRP <-------------------\n")
 			if !logued {
 				Comands.Error("CHGRP", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -316,6 +373,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "MKUSR") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO MKUSR <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO MKUSR <-------------------\n")
 			if !logued {
 				Comands.Error("MKUSER", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -325,6 +384,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "RMUSR") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO RMUSR <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO RMUSR <-------------------\n")
 			if !logued {
 				Comands.Error("RMUSER", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -334,6 +395,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "MKDIR") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO MKDIR <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO MKDIR <-------------------\n")
 			if !logued {
 				Comands.Error("MKDIR", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -345,6 +408,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "MKFILE") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO MKFILE <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO MKFILE <-------------------\n")
 			if !logued {
 				Comands.Error("MKDIR", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -356,6 +421,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "CAT") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO CAT <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO CAT <-------------------\n")
 			if !logued {
 				Comands.Error("CAT", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -367,6 +434,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "CHMOD") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO CHMOD <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO CHMOD <-------------------\n")
 			if !logued {
 				Comands.Error("CHMOD", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -378,6 +447,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "CHOWN") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO CHOWN <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO CHOWN <-------------------\n")
 			if !logued {
 				Comands.Error("CHOWN", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -389,6 +460,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "RENAME") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO RENAME <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO RENAME <-------------------\n")
 			if !logued {
 				Comands.Error("RENAME", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -400,6 +473,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "MOVE") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO MOVE <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO MOVE <-------------------\n")
 			if !logued {
 				Comands.Error("MOVE", "Aún no se ha iniciado sesión", ResponseString)
 				return
@@ -411,6 +486,8 @@ func functions(token string, tks []string) {
 		} else if Comands.Compare(token, "REP") {
 			ResponseString += ""
 			ResponseString += "-------------------> COMANDO REP <-------------------\n"
+			Comands.SetStringtoRes("")
+			Comands.SetStringtoRes("-------------------> COMANDO REP <-------------------\n")
 			Comands.DataRep(tks, ResponseString)
 		} else {
 			Comands.Error("ANALIZADOR", "NO se reconoce el comando \" "+token+"\" ", ResponseString)

@@ -18,15 +18,13 @@ func Compare(a string, b string) bool {
 	return false
 }
 
+var responComand = ""
+
 func Error(op string, message string, responseString string) {
 	responseString += ""
 	responseString += "\tERROR: " + op + "\n\tTIPO: " + message
-}
-
-func Message(op string, message string, responseString string) {
-	responseString += ""
-	responseString += "\tCOMANDO: " + op + "\n\tTIPO: " + message
-	responseString += ""
+	responComand += ""
+	responComand += "\tERROR: " + op + "\n\tTIPO: " + message + "\n"
 }
 
 func ExistedFile(path string) bool {
@@ -41,6 +39,15 @@ func WritingBytes(file *os.File, bytes []byte) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func Message(op string, message string, responseString string) {
+	responseString += ""
+	responseString += "\tCOMANDO: " + op + "\n\tTIPO: " + message + "\n"
+	responseString += ""
+	responComand += ""
+	responComand += "\tCOMANDO: " + op + "\n\tTIPO: " + message + "\n"
+	responComand += ""
 }
 
 func readBytes(file *os.File, number int) []byte {
@@ -106,4 +113,12 @@ func Execute(nameFile string, file string, extension string, responseString stri
 	mode := 0777
 	_ = os.WriteFile(nameFile, cmd, os.FileMode(mode))
 	Message("REP", "Archivo "+nameFile+", se ha generado correctamente", responseString)
+}
+
+func SetStringtoRes(text string) {
+	responComand += text
+}
+
+func GetStirngRes() string {
+	return responComand
 }
