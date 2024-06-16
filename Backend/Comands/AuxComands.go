@@ -83,8 +83,8 @@ func CreateFile(nameFile string) {
 	var _, err = os.Stat(nameFile)
 
 	if os.IsNotExist(err) {
-		var file, err_2 = os.Create(nameFile)
-		if err_2 != nil {
+		var file, err2 = os.Create(nameFile)
+		if err2 != nil {
 			return
 		}
 		defer file.Close()

@@ -179,6 +179,7 @@ func getFileSystem(path string, partition Structs.Partition) string {
 				}
 				fileSystem += "{\"folder\":"
 				fileSystem += "{\"name\":" + "\"" + name + "\","
+
 				fileSystem += "\"content\":" + recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
 				// fileSystem += recursiveFileSystem(folder.B_content[3].B_inodo, partition, path)
 				fileSystem += "}"
@@ -200,7 +201,9 @@ func recursiveFileSystem(control int64, partition Structs.Partition, path string
 
 	file, err := os.Open(strings.ReplaceAll(path, "\"", ""))
 	if err != nil {
+		fmt.Println("ERROR PATH" + path)
 		fmt.Println("ERROR - 4")
+		fmt.Println(err)
 		return ""
 	}
 
@@ -337,5 +340,6 @@ func recursiveFileSystem(control int64, partition Structs.Partition, path string
 		}
 		fileSystem += "\"" + content + "\""
 	}
+
 	return fileSystem
 }

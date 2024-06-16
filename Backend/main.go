@@ -40,8 +40,8 @@ func main() {
 	// start server listen
 
 	// SERVER
-	fmt.Println("Server on port 3000")
-	log.Fatal(http.ListenAndServe(":3000", handler))
+	fmt.Println("Server on port 8080")
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }
 
 func allowCORS(handler http.Handler) http.Handler {
@@ -168,6 +168,7 @@ func makeReports(w http.ResponseWriter, r *http.Request) {
 func deleteFiles(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	currentPath, _ := os.Getwd()
+
 	path := currentPath + "/MIA"
 	err := os.RemoveAll(path)
 	if err != nil {
@@ -181,7 +182,7 @@ func deleteFiles(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path2 := currentPath + "/MIA/P2/Rep"
-	errC := os.MkdirAll(path2, 0755)
+	errC := os.MkdirAll(path2, 0777)
 	if errC != nil {
 		return
 	}

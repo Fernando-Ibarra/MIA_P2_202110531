@@ -1,0 +1,11 @@
+FROM golang:alpine
+
+WORKDIR /app
+
+COPY . .
+
+RUN go mod init backend
+RUN go got -u github.com/gorilla/mux
+
+EXPOSE 8080
+CMD [ "go", "run", "main.go" ]

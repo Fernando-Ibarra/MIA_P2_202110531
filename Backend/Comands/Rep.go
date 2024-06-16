@@ -53,7 +53,6 @@ func DataRep(context []string, responseString string) {
 	currentPath, _ := os.Getwd()
 	diskPath := currentPath + "/MIA/P2/Rep/"
 	pathOut = diskPath + nameG
-
 	fmt.Println(pathOut)
 
 	if Compare(name, "mbr") {
